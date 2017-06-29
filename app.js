@@ -24,9 +24,19 @@ var Post = mongoose.model('Post', postSchema);
 
 // REST ROUTES
 
-app.get('/posts', function(req, res){
-    res.render('index');
+app.get('/', function(req, res){
+    res.redirect('/posts');
 })
+
+app.get('/posts', function(req, res){
+    Post.find({}, function(err, posts){
+        if(err) {
+            console.log('error!');
+        } else {
+            res.render('index', {posts: posts});
+        }
+    });
+});
 
 
 
