@@ -24,7 +24,9 @@ var Post = mongoose.model('Post', postSchema);
 
 // REST ROUTES
 
-// ap.get('/posts')
+app.get('/posts', function(req, res){
+    res.render('index');
+})
 
 
 
