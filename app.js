@@ -51,6 +51,28 @@ app.get('/posts/new', function(req, res){
     
 });
 
+// CREATE ROUTE
+app.post('/posts', function(req, res){
+    Post.create(req.body.post, function(err, newPost){
+        if(err) {
+            res.redirect('new');
+        } else {
+            res.redirect('/posts');
+        }
+    });
+});
+
+
+// SHOUW ROUTE
+app.get('/posts/:id', function(req,res){
+   Post.findById(req.params.id, function(err, foundPost){
+       if(err) {
+           res.redirect('/posts');
+       } else {
+           res.render('show', {post: foundPost});
+       }
+   }) 
+});
 
 
 app.listen(process.env.PORT, process.env.IP, function(){

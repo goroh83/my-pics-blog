@@ -4,14 +4,14 @@
 <div class='container'>
     <h1>Add new post</h1>
     <div class='main'>
-        <form action='/post' method='POST'>
-            <label>Post title</label>
+        <form action='/posts' method='POST'>
+            <label>Post title:</label><br>
             <input type='text' name='post[title]'><br>
-            <label>Image source</label>
+            <label>Image source:</label><br>
             <input type='text' name='post[image]'><br>
-            <label>Post content</label>
-            <input type='text' name='post[content]'><br>
-            <input type='submit'>
+            <label>Post content:</label><br>
+            <textarea name='post[body]'></textarea><br>
+            <input type='submit' class='post-submit__btn'>
         </form>
     </div>
 
