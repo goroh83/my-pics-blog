@@ -20,14 +20,21 @@ var postSchema = new mongoose.Schema ({
 
 var Post = mongoose.model('Post', postSchema); 
 
-
+// Post.create ({
+//     title: 'Evening in Hangzhou',
+//     image: 'http://photo.goroh.co/wp-content/uploads/2017/02/DSC_2751.jpg',
+//     body: 'West Lake area in Hangzhou.'
+// });
 
 // REST ROUTES
+
 
 app.get('/', function(req, res){
     res.redirect('/posts');
 })
 
+
+// INDEX ROUTE
 app.get('/posts', function(req, res){
     Post.find({}, function(err, posts){
         if(err) {
@@ -36,6 +43,12 @@ app.get('/posts', function(req, res){
             res.render('index', {posts: posts});
         }
     });
+});
+
+// NEW ROUTE
+app.get('/posts/new', function(req, res){
+    res.render('new');
+    
 });
 
 

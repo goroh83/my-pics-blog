@@ -1,0 +1,23 @@
+<% include ./partials/header %>
+
+
+<div class='container'>
+    <h1>Add new post</h1>
+    <div class='main'>
+        <form action='/post' method='POST'>
+            <label>Post title</label>
+            <input type='text' name='post[title]'><br>
+            <label>Image source</label>
+            <input type='text' name='post[image]'><br>
+            <label>Post content</label>
+            <input type='text' name='post[content]'><br>
+            <input type='submit'>
+        </form>
+    </div>
+
+
+
+
+
+
+<% include ./partials/footer %>

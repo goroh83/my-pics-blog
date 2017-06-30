@@ -1,16 +1,24 @@
 <% include ./partials/header %>
 
-<h1>Selection of my travel pics</h1>
 
+<div class='container'>
+    <h1>Selection of my travel pics</h1>
 
-<% posts.forEach(function(post) { %>
-    <div>
-        <h2><%= post.title %></h2>
-        <img src='<%= post.image%>' >
-        <span><%= post.created %></span>
-        <p><%= post.body %></p>
+    <div class='main'>
+        <% posts.forEach(function(post) { %>
+            <div class='main-post'>
+                <h2><%= post.title %></h2>
+                <img src='<%= post.image%>' >
+                <span><%= post.created %></span>
+                <p><%= post.body.substring(0, 50) %>...</p>
+                <a href='posts/<%= post._id %>'class='read-more__btn'>Read more</a>
+            </div>
+        <% }); %>
     </div>
-<% }); %>
+
+
+
+
 
 
 <% include ./partials/footer %>
