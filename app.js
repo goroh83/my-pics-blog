@@ -1,8 +1,9 @@
-var bodyParser = require('body-parser'),
-methodOverride = require('method-override'),
-mongoose       = require('mongoose'),
-express        = require('express'),
-app            = express();
+var  expressSanitizer   = require('express-sanitizer'),
+methodOverride          = require('method-override'),
+bodyParser              = require('body-parser'),
+mongoose                = require('mongoose'),
+express                 = require('express'),
+app                     = express();
 
 
 // APP CONFIG
@@ -10,6 +11,7 @@ mongoose.connect('mongodb://localhost/post');
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(expressSanitizer());
 app.use(methodOverride('_method'));
 
 
@@ -28,7 +30,6 @@ var Post = mongoose.model('Post', postSchema);
 app.get('/', function(req, res){
     res.redirect('/posts');
 });
-
 
 // INDEX ROUTE
 app.get('/posts', function(req, res){
@@ -49,6 +50,7 @@ app.get('/posts/new', function(req, res){
 
 // CREATE ROUTE
 app.post('/posts', function(req, res){
+    req.body.post.body = req.sanitizer(req.body.post.body);
     Post.create(req.body.post, function(err, newPost){
         if(err) {
             res.redirect('new');
@@ -57,7 +59,6 @@ app.post('/posts', function(req, res){
         }
     });
 });
-
 
 // SHOW ROUTE
 app.get('/posts/:id', function(req,res){
@@ -83,6 +84,7 @@ app.get('/posts/:id/edit', function(req, res){
 
 //UPDATE ROUTE
 app.put('/posts/:id', function(req, res){
+    req.body.post.body = req.sanitizer(req.body.post.body);
     Post.findByIdAndUpdate(req.params.id, req.body.post, function(err, updatedPost){
         if(err) {
             res.redirect('/posts');
@@ -100,10 +102,8 @@ app.delete('/posts/:id', function(req, res){
         } else {
             res.redirect('posts');
         }
-    })
+    });
 });
-
-
 
 app.listen(process.env.PORT, process.env.IP, function(){
     console.log('blog server is running');
