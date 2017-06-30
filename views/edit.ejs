@@ -1,0 +1,21 @@
+<% include ./partials/header %>
+
+
+<div class='container'>
+    <h1>Edit post: "<%= post.title %>"</h1>
+        <form action='/posts/<%= post._id %>?_method=PUT' method='POST'>
+            <label>Post title:</label><br>
+            <input type='text' name='post[title]' class='set-width' value='<%= post.title %>'><br>
+            <label>Image source:</label><br>
+            <input type='text' name='post[image]' class='set-width'value='<%= post.image %>'><br>
+            <label>Post content:</label><br>
+            <textarea name='post[body]' cols="60" rows="20"><%= post.body %></textarea><br>
+            <input type='submit' class='post-submit__btn'>
+        </form>
+
+
+
+
+
+
+<% include ./partials/footer %>

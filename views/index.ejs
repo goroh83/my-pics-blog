@@ -13,8 +13,8 @@
             <div class='main-post'>
                 <h2><%= post.title %></h2>
                 <img src='<%= post.image %>' >
-                <span><%= post.created %></span>
-                <p><%= post.body %>...</p>
+                <span><%= post.created.toDateString() %></span>
+                <p><%= post.body.substring( 0, 50) %>...</p>
                 <a href='posts/<%= post._id %>'class='read-more__btn'>Read more</a>
             </div>
         <% }); %>

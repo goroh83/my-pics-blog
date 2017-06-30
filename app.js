@@ -1,4 +1,5 @@
 var bodyParser = require('body-parser'),
+methodOverride = require('method-override'),
 mongoose       = require('mongoose'),
 express        = require('express'),
 app            = express();
@@ -9,6 +10,8 @@ mongoose.connect('mongodb://localhost/post');
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(methodOverride('_method'));
+
 
 //MONGOOSE MODEL CONFIG
 var postSchema = new mongoose.Schema ({
@@ -20,18 +23,11 @@ var postSchema = new mongoose.Schema ({
 
 var Post = mongoose.model('Post', postSchema); 
 
-// Post.create ({
-//     title: 'Evening in Hangzhou',
-//     image: 'http://photo.goroh.co/wp-content/uploads/2017/02/DSC_2751.jpg',
-//     body: 'West Lake area in Hangzhou.'
-// });
-
 // REST ROUTES
-
 
 app.get('/', function(req, res){
     res.redirect('/posts');
-})
+});
 
 
 // INDEX ROUTE
@@ -63,7 +59,7 @@ app.post('/posts', function(req, res){
 });
 
 
-// SHOUW ROUTE
+// SHOW ROUTE
 app.get('/posts/:id', function(req,res){
    Post.findById(req.params.id, function(err, foundPost){
        if(err) {
@@ -71,8 +67,42 @@ app.get('/posts/:id', function(req,res){
        } else {
            res.render('show', {post: foundPost});
        }
-   }) 
+   });
 });
+
+//EDIT ROUTE
+app.get('/posts/:id/edit', function(req, res){
+   Post.findById(req.params.id, function(err, foundPost){
+       if(err) {
+           res.redirect('/posts');
+       } else {
+           res.render('edit', {post: foundPost});
+       }
+   });
+});
+
+//UPDATE ROUTE
+app.put('/posts/:id', function(req, res){
+    Post.findByIdAndUpdate(req.params.id, req.body.post, function(err, updatedPost){
+        if(err) {
+            res.redirect('/posts');
+        } else {
+            res.redirect(/posts/ + req.params.id);
+        }
+    });
+});
+
+// DELETE ROUTE
+app.delete('/posts/:id', function(req, res){
+    Post.findByIdAndRemove(req.params.id, function(err){
+        if(err){
+            res.redirect('/posts');
+        } else {
+            res.redirect('posts');
+        }
+    })
+});
+
 
 
 app.listen(process.env.PORT, process.env.IP, function(){
