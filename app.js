@@ -3,7 +3,10 @@ methodOverride          = require('method-override'),
 bodyParser              = require('body-parser'),
 mongoose                = require('mongoose'),
 express                 = require('express'),
-app                     = express();
+app                     = express(),
+Post                    = require('./models/post');
+// Comment                 = require('./models/comment'),
+// User                    = require('./models/user');
 
 
 // APP CONFIG
@@ -15,15 +18,7 @@ app.use(expressSanitizer());
 app.use(methodOverride('_method'));
 
 
-//MONGOOSE MODEL CONFIG
-var postSchema = new mongoose.Schema ({
-    title: String,
-    image: String,
-    body: String,
-    created: { type: Date, default: Date.now}
-});
 
-var Post = mongoose.model('Post', postSchema); 
 
 // REST ROUTES
 
@@ -50,7 +45,7 @@ app.get('/posts/new', function(req, res){
 
 // CREATE ROUTE
 app.post('/posts', function(req, res){
-    req.body.post.body = req.sanitizer(req.body.post.body);
+    req.body.post.body = req.sanitize(req.body.post.body);
     Post.create(req.body.post, function(err, newPost){
         if(err) {
             res.redirect('new');
@@ -84,7 +79,7 @@ app.get('/posts/:id/edit', function(req, res){
 
 //UPDATE ROUTE
 app.put('/posts/:id', function(req, res){
-    req.body.post.body = req.sanitizer(req.body.post.body);
+    req.body.post.body = req.sanitize(req.body.post.body);
     Post.findByIdAndUpdate(req.params.id, req.body.post, function(err, updatedPost){
         if(err) {
             res.redirect('/posts');
