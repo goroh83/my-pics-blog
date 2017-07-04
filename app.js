@@ -9,9 +9,8 @@ seedDB                  = require('./seeds');
 // Comment                 = require('./models/comment'),
 // User                    = require('./models/user');
 
-
 // APP CONFIG
-seedDB()
+seedDB();
 mongoose.connect('mongodb://localhost/post');
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -19,11 +18,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer());
 app.use(methodOverride('_method'));
 
-
-
-
 // REST ROUTES
-
 app.get('/', function(req, res){
     res.redirect('/posts');
 });
@@ -59,7 +54,7 @@ app.post('/posts', function(req, res){
 
 // SHOW ROUTE
 app.get('/posts/:id', function(req,res){
-   Post.findById(req.params.id, function(err, foundPost){
+   Post.findById(req.params.id).populate('comments').exec(function(err, foundPost){
        if(err) {
            res.redirect('/posts');
        } else {

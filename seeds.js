@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Post     = require('./models/post');
+var Comment  = require('./models/comment');
 
 var data = [
     { 
@@ -17,9 +18,7 @@ var data = [
         image:'http://photo.goroh.co/wp-content/uploads/2017/02/P7291268.jpg',
         body: 'View form Tsim Sha Tsui over HK bay'
     }
-]
-
-
+];
 
 function seedDB(){
     // remove posts
@@ -28,19 +27,31 @@ function seedDB(){
             console.log(err);
         }
         console.log('removed posts');
-    }); 
-    // add few posts
-    data.forEach(function(seed){
-        Post.create(seed, function(err, data){
-            if(err){
-                console.log(err);
-            } else {
-                console.log('added a post');
-            }
+        // add few posts
+        data.forEach(function(seed){
+            Post.create(seed, function(err, post){
+                if(err){
+                    console.log(err);
+                } else {
+                    console.log('added a post');
+                    // create comment
+                    Comment.create(
+                        {
+                            text: 'This photo is great, good job Peter ;)',
+                            author: 'Peter'
+                        }, function(err, comment){
+                            if(err) {
+                                console.log(err);
+                            } else {
+                            post.comments.push(comment);
+                            post.save();
+                            console.log('creacted new comment');
+                            }
+                        });
+                }
+            });
         });
-    });
-    
-    
+    }); 
     //add few comments
 }
 
