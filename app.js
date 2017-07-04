@@ -4,12 +4,14 @@ bodyParser              = require('body-parser'),
 mongoose                = require('mongoose'),
 express                 = require('express'),
 app                     = express(),
-Post                    = require('./models/post');
+Post                    = require('./models/post'),
+seedDB                  = require('./seeds');
 // Comment                 = require('./models/comment'),
 // User                    = require('./models/user');
 
 
 // APP CONFIG
+seedDB()
 mongoose.connect('mongodb://localhost/post');
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
