@@ -1,0 +1,19 @@
+<% include ../partials/header %>
+
+<div class='container'>
+    <div class=''>
+        <div class='new-post__main'>
+            <h1>Add new comment</h1>
+            <form action='/posts/<%= post._id %>/comments' method='POST'>
+                <label>Author:</label><br>
+                <input type='text' name='comment[author]' class='set-width'><br>
+                <label>Text</label><br>
+                <input type='text' name='comment[text]' class='set-width'><br>
+                <input type='submit' class='post-submit__btn'>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<% include ../partials/footer %>

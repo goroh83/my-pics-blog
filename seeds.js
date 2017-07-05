@@ -52,7 +52,6 @@ function seedDB(){
             });
         });
     }); 
-    //add few comments
 }
 
 module.exports = seedDB;
