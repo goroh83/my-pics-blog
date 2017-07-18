@@ -1,0 +1,15 @@
+<% include ./partials/header %>
+
+<div class='container'>
+    <h1>Register</h1>
+    <div class='new-post__main'>
+        <form action='/register' method='POST'>
+            <label>username:</label><br>
+            <input type='text' name='username' class='set-width'><br>
+            <label>password:</label><br>
+            <input type='text' name='password' class='set-width'><br>
+            <input type='submit' class='post-submit__btn'>
+        </form>
+    </div>
+</div>
+<% include ./partials/footer %>

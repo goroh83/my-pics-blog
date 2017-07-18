@@ -1,6 +1,5 @@
 var  expressSanitizer   = require('express-sanitizer'),
 methodOverride          = require('method-override'),
-bodyParser              = require('body-parser'),
 mongoose                = require('mongoose'),
 express                 = require('express'),
 app                     = express(),
@@ -8,27 +7,66 @@ Post                    = require('./models/post'),
 Comment                 = require('./models/comment'),
 seedDB                  = require('./seeds'),
 passport                = require('passport'),
+bodyParser              = require('body-parser'),
+User                    = require('./models/user'),
 LocalStrategy           = require('passport-local'),
-passportLocalMongoose   = require('passport-local-mongoose'),
-user                    = require('./models/user');
+passportLocalMongoose   = require('passport-local-mongoose');
 // Comment                 = require('./models/comment'),
 // User                    = require('./models/user');
 
 // APP CONFIG
 seedDB();
-mongoose.connect('mongodb://localhost/post');
 app.set('view engine', 'ejs');
+mongoose.connect('mongodb://localhost/post');
+app.use(require('express-session')({
+    secret: 'Goroh is bald',
+    resave: false,
+    saveUninitialized: false
+}));
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer());
-app.use(methodOverride('_method')),
-app.use(passport.initialize()),
+app.use(methodOverride('_method'));
+app.use(passport.initialize());
 app.use(passport.session());
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 
 // REST ROUTES
 app.get('/', function(req, res){
     res.redirect('/posts');
 });
+
+app.get('/secret', function(req, res){
+   res.render('secret'); 
+});
+
+// Auth routes
+
+//show sign up form
+app.get('/register', function(req, res){
+   res.render('register'); 
+});
+
+
+//handling user sign up
+app.post('/register', function(req, res){
+   req.body.username;
+   req.body.password;
+   User.register(new User({username: req.body.username}), req.body.password, function(err, user){
+       if(err){
+           console.log(err);
+           return res.render('register');
+       }
+           passport.authenticate('local')(req, res, function(){
+               res.redirect('/secret');
+        });
+   });
+});
+
+
 
 // INDEX ROUTE
 app.get('/posts', function(req, res){
