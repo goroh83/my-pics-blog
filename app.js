@@ -6,7 +6,11 @@ express                 = require('express'),
 app                     = express(),
 Post                    = require('./models/post'),
 Comment                 = require('./models/comment'),
-seedDB                  = require('./seeds');
+seedDB                  = require('./seeds'),
+passport                = require('passport'),
+LocalStrategy           = require('passport-local'),
+passportLocalMongoose   = require('passport-local-mongoose'),
+user                    = require('./models/user');
 // Comment                 = require('./models/comment'),
 // User                    = require('./models/user');
 
@@ -17,7 +21,9 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer());
-app.use(methodOverride('_method'));
+app.use(methodOverride('_method')),
+app.use(passport.initialize()),
+app.use(passport.session());
 
 // REST ROUTES
 app.get('/', function(req, res){
