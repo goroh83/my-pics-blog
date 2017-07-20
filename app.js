@@ -40,17 +40,16 @@ app.get('/', function(req, res){
     res.redirect('/posts');
 });
 
-app.get('/secret', function(req, res){
+app.get('/secret', isLoggedIn, function(req, res){
    res.render('secret'); 
 });
 
-// Auth routes
+// AUTH ROUTES
 
 //show sign up form
 app.get('/register', function(req, res){
    res.render('register'); 
 });
-
 
 //handling user sign up
 app.post('/register', function(req, res){
@@ -67,16 +66,14 @@ app.post('/register', function(req, res){
    });
 });
 
-
 //LOGIN ROUTES
 //render login form
 app.get('/login', function(req, res){
    res.render('login'); 
 });
 
-
 //login logic
-//middleware- code that runs b4 final route callback
+//MIDDLEWARE- code that runs b4 final route callback function
 app.post('/login', passport.authenticate('local', {
     successRedirect: '/secret',
     failureRedirect: '/login'
@@ -84,6 +81,18 @@ app.post('/login', passport.authenticate('local', {
     
 });
 
+//logout
+app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+});
+
+function isLoggedIn(req, res, next) {
+    if(req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/login');
+}
 
 
 // INDEX ROUTE
