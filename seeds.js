@@ -23,34 +23,34 @@ var data = [
 function seedDB(){
     // remove posts
     Post.remove({}, function(err){
-        if(err) {
-            console.log(err);
-        }
-        console.log('removed posts');
-        // add few posts
-        data.forEach(function(seed){
-            Post.create(seed, function(err, post){
-                if(err){
-                    console.log(err);
-                } else {
-                    console.log('added a post');
-                    // create comment
-                    Comment.create(
-                        {
-                            text: 'This photo is great, good job Peter ;)',
-                            author: 'Peter'
-                        }, function(err, comment){
-                            if(err) {
-                                console.log(err);
-                            } else {
-                            post.comments.push(comment);
-                            post.save();
-                            console.log('creacted new comment');
-                            }
-                        });
-                }
-            });
-        });
+        // if(err) {
+        //     console.log(err);
+        // }
+        // console.log('removed posts');
+        // // add few posts
+        // data.forEach(function(seed){
+        //     Post.create(seed, function(err, post){
+        //         if(err){
+        //             console.log(err);
+        //         } else {
+        //             console.log('added a post');
+        //             // create comment
+        //             Comment.create(
+        //                 {
+        //                     text: 'This photo is great, good job Peter ;)',
+        //                     author: 'Peter'
+        //                 }, function(err, comment){
+        //                     if(err) {
+        //                         console.log(err);
+        //                     } else {
+        //                     post.comments.push(comment);
+        //                     post.save();
+        //                     console.log('creacted new comment');
+        //                     }
+        //                 });
+        //         }
+        //     });
+        // });
     }); 
 }
 

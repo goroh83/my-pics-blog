@@ -17,7 +17,7 @@
         <hr>
         <h2>Comments:</h2>
         <% post.comments.forEach(function(comment){ %>
-            <p><%= comment.author %>:</p>
+            <p><%= comment.author.username %>:</p>
             <p><%= comment.text %></p>
         <% }); %>
         <button class="btn btn-success"><a  href="/posts/<%= post._id %>/comments/new">Add New Comment</a></button
