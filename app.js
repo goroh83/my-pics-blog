@@ -34,6 +34,10 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use(function(req, res, next) {
+   res.locals.currentUser = req.user;
+   next();
+});
 
 // REST ROUTES
 app.get('/', function(req, res){
@@ -87,13 +91,6 @@ app.get('/logout', function(req, res){
     res.redirect('/');
 });
 
-function isLoggedIn(req, res, next) {
-    if(req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/login');
-}
-
 
 // INDEX ROUTE
 app.get('/posts', function(req, res){
@@ -107,7 +104,7 @@ app.get('/posts', function(req, res){
 });
 
 // NEW ROUTE
-app.get('/posts/new', function(req, res){
+app.get('/posts/new',isLoggedIn, function(req, res){
     res.render('posts/new');
     
 });
@@ -125,7 +122,7 @@ app.post('/posts', function(req, res){
 });
 
 // SHOW ROUTE
-app.get('/posts/:id', function(req,res){
+app.get('/posts/:id', function(req, res){
    Post.findById(req.params.id).populate('comments').exec(function(err, foundPost){
        if(err) {
            res.redirect('/posts');
@@ -136,7 +133,7 @@ app.get('/posts/:id', function(req,res){
 });
 
 //EDIT ROUTE
-app.get('/posts/:id/edit', function(req, res){
+app.get('/posts/:id/edit',isLoggedIn, function(req, res){
    Post.findById(req.params.id, function(err, foundPost){
        if(err) {
            res.redirect('/posts');
@@ -159,7 +156,7 @@ app.put('/posts/:id', function(req, res){
 });
 
 // DELETE ROUTE
-app.delete('/posts/:id', function(req, res){
+app.delete('/posts/:id',isLoggedIn, function(req, res){
     Post.findByIdAndRemove(req.params.id, function(err){
         if(err){
             res.redirect('/posts');
@@ -171,7 +168,7 @@ app.delete('/posts/:id', function(req, res){
 
 
 // ======= comments routes ========
-app.get('/posts/:id/comments/new', function(req, res){
+app.get('/posts/:id/comments/new', isLoggedIn, function(req, res){
     Post.findById(req.params.id, function(err, post){
         if(err){
             console.log(err);
@@ -181,7 +178,7 @@ app.get('/posts/:id/comments/new', function(req, res){
     });     
 });
 
-app.post('/posts/:id/comments', function(req, res) {
+app.post('/posts/:id/comments', isLoggedIn, function(req, res) {
     Post.findById(req.params.id, function(err, post){
         if(err){
             console.log(err);
@@ -199,6 +196,13 @@ app.post('/posts/:id/comments', function(req, res) {
         }
     });
 });
+
+function isLoggedIn(req, res, next) {
+    if(req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/login');
+}
 
 app.listen(process.env.PORT, process.env.IP, function(){
     console.log('blog server is running');
