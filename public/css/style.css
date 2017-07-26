@@ -165,6 +165,19 @@ input.set-width {
     cursor: pointer;
 }
 
+.add-comment__btn {
+    padding: 5px;
+    color: green;
+    border: 1px solid green;
+    transition: all 500ms ease;  
+}
+
+.add-comment__btn:hover {
+     color: #ffffff;   
+     background: green; 
+}
+
+
 footer {
     text-align: center;
     margin-top: 10px;

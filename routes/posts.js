@@ -56,19 +56,14 @@ router.get('/posts/:id', function(req, res){
 
  //-----------------------------------
 //EDIT ROUTE
-router.get('/posts/:id/edit',isLoggedIn, function(req, res){
-   Post.findById(req.params.id, function(err, foundPost){
-       if(err) {
-           res.redirect('/posts');
-       } else {
-           res.render('posts/edit', {post: foundPost});
-       }
-   });
+router.get('/posts/:id/edit', checkPostAuthor, function(req, res){
+        Post.findById(req.params.id, function(err, foundPost){
+            res.render('posts/edit', {post: foundPost});
+        });
 });
 
 //UPDATE ROUTE
 router.put('/posts/:id',isLoggedIn, function(req, res){
-    req.body.post.body = req.sanitize(req.body.post.body);
     Post.findByIdAndUpdate(req.params.id, req.body.post, function(err, updatedPost){
         if(err) {
             res.redirect('/posts');
@@ -89,12 +84,33 @@ router.delete('/posts/:id',isLoggedIn, function(req, res){
     });
 });
 
+
 //middleware
 function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) {
         return next();
     }
     res.redirect('/login');
+}
+
+// checkPostAuthorization
+function  checkPostAuthor(req, res, next){
+    if(req.isAuthenticated()){
+        Post.findById(req.params.id, function(err, foundPost){
+            if(err) {
+                res.redirect('back');
+            } else {
+                //does user own the post
+                if(foundPost.author.id.equals(req.user._id)){
+                    next();
+                } else {
+                    res.redirect('back');
+                }
+            }    
+        });
+    } else {
+        res.redirect('back');
+    }
 }
 
 module.exports = router;

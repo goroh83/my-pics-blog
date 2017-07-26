@@ -6,9 +6,9 @@
             <label>Post title:</label><br>
             <input type='text' name='post[title]' class='set-width' value='<%= post.title %>'><br>
             <label>Image source:</label><br>
-            <input type='text' name='post[image]' class='set-width'value='<%= post.image %>'><br>
+            <input type='text' name='post[image]' class='set-width' value='<%= post.image %>'><br>
             <label>Post content:</label><br>
-            <textarea name='post[body]' cols="60" rows="20"><%- post.body %></textarea><br>
+            <textarea name='post[desc]' cols="60" rows="20"><%= post.desc %></textarea><br>
             <input type='submit' class='post-submit__btn'>
         </form>
 

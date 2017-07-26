@@ -21,7 +21,7 @@
             <p><%= comment.author.username %>:</p>
             <p><%= comment.text %></p>
         <% }); %>
-        <button class="btn btn-success"><a  href="/posts/<%= post._id %>/comments/new">Add New Comment</a></button
+        <a href="/posts/<%= post._id %>/comments/new" class="add-comment__btn">Add New Comment</a>
     </div>
 </div>   
 <% include ../partials/footer %>
