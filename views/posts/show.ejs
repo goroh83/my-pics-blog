@@ -5,8 +5,9 @@
         <div class='post-page'>
             <h1><%= post.title %></h1>
             <img src='<%= post.image %>' class='show-post'><br>
+            <p><em></em>submitted by: <%= post.author.username %></em></p>
             <span><%= post.created.toDateString() %></span>
-            <p><%= post.body %></p>
+            <p><%= post.desc %></p>
             <a href='/posts' class='show-back__btn'>Back to Main</a>
             <a href='/posts/<%= post._id %>/edit' class='show-edit__btn'>Edit post</a>
             <form action='/posts/<%= post._id%>?_method=DELETE'  method='POST' >

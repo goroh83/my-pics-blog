@@ -13,7 +13,7 @@
                 <h2><%= post.title %></h2>
                 <img src='<%= post.image %>' >
                 <span><%= post.created.toDateString() %></span>
-                <p><%= post.body.substring( 0, 100) %>...</p>
+                <p><%= post.desc.substring( 0, 100) %>...</p>
                 <a href='posts/<%= post._id %>'class='read-more__btn'>Read more</a>
             </div>
         <% }); %>

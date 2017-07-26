@@ -26,8 +26,15 @@ router.get('/posts/new',isLoggedIn, function(req, res){
 
 // CREATE ROUTE
 router.post('/posts', function(req, res){
-    req.body.post.body = req.sanitize(req.body.post.body);
-    Post.create(req.body.post, function(err, newPost){
+    var title = req.body.title;
+    var image = req.body.image;
+    var desc = req.body.desc;
+    var author = {
+        id: req.user._id,
+        username: req.user.username
+    };
+    var newPost = {title: title, image: image, desc: desc, author: author};
+    Post.create(newPost, function(err, newlyCreated){
         if(err) {
             res.redirect('new');
         } else {

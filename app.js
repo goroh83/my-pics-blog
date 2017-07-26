@@ -12,6 +12,7 @@ User                    = require('./models/user'),
 LocalStrategy           = require('passport-local'),
 passportLocalMongoose   = require('passport-local-mongoose');
 
+mongoose.Promise = global.Promise;
 
 // requring routes
 var commentRoutes = require('./routes/comments');
