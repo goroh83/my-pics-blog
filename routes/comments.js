@@ -5,6 +5,7 @@ var Comment    = require('../models/comment');
 
 
 // ======= comments routes ========
+// new comment form
 router.get('/posts/:id/comments/new', isLoggedIn, function(req, res){
     Post.findById(req.params.id, function(err, post){
         if(err){
@@ -15,6 +16,8 @@ router.get('/posts/:id/comments/new', isLoggedIn, function(req, res){
     });     
 });
 
+
+// create comment
 router.post('/posts/:id/comments', isLoggedIn, function(req, res) {
     Post.findById(req.params.id, function(err, post){
         if(err){
@@ -37,6 +40,41 @@ router.post('/posts/:id/comments', isLoggedIn, function(req, res) {
             });
         }
     });
+});
+
+
+// EDIT comment
+router.get('/posts/:id/comments/:comment_id/edit', function(req, res){
+    Comment.findById(req.params.comment_id, function(err, foundComment){
+        if(err) {
+            res.redirect('back');
+        } else {
+            res.render('comments/edit', {post_id: req.params.id, comment: foundComment});
+        }
+    });
+});
+
+// UPDATE
+router.put('/posts/:id/comments/:comment_id', function(req, res){
+    Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment){
+        if(err){
+            res.redirect('back');
+        } else {
+            res.redirect('/posts/' + req.params.id);
+        }
+    });
+});
+
+// DESTROY
+router.delete('/posts/:id/comments/:comment_id', function(req, res){
+    // finad and destroy
+    Comment.findByIdAndRemove(req.params.comment_id, function(err) {
+        if(err){
+            res.redirect('back');
+        } else {
+            res.redirect('/posts/' + req.params.id);
+        }   
+    });    
 });
 
 // middleware

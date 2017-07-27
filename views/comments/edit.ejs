@@ -1,0 +1,17 @@
+<% include ../partials/header %>
+
+<div class='container'>
+    <div class=''>
+        <div class='new-post__main'>
+            <h1>Edit comment:</h1>
+            <form action='/posts/<%= post_id %>/comments/<%= comment._id %>?_method=PUT' method='POST'>
+                <label>Text</label><br>
+                <input type='text' name='comment[text]' class='set-width' value='<%= comment.text %>'><br>
+                <input type='submit' class='post-submit__btn'>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<% include ../partials/footer %>

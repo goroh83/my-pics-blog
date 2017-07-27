@@ -23,7 +23,7 @@ var authRoutes = require('./routes/index');
 // APP CONFIG
 // seedDB();
 app.set('view engine', 'ejs');
-mongoose.connect('mongodb://localhost/post');
+mongoose.connect('mongodb://localhost/post'); //  , {useMongoClient: true});
 app.use(require('express-session')({
     secret: 'Goroh is bald',
     resave: false,
@@ -40,6 +40,8 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+
+// add currentUser property to every page
 app.use(function(req, res, next) {
    res.locals.currentUser = req.user;
    next();

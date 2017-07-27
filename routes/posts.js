@@ -54,7 +54,6 @@ router.get('/posts/:id', function(req, res){
    });
 });
 
- //-----------------------------------
 //EDIT ROUTE
 router.get('/posts/:id/edit', checkPostAuthor, function(req, res){
         Post.findById(req.params.id, function(err, foundPost){
@@ -63,7 +62,7 @@ router.get('/posts/:id/edit', checkPostAuthor, function(req, res){
 });
 
 //UPDATE ROUTE
-router.put('/posts/:id',isLoggedIn, function(req, res){
+router.put('/posts/:id',checkPostAuthor, function(req, res){
     Post.findByIdAndUpdate(req.params.id, req.body.post, function(err, updatedPost){
         if(err) {
             res.redirect('/posts');
@@ -74,7 +73,7 @@ router.put('/posts/:id',isLoggedIn, function(req, res){
 });
 
 // DELETE ROUTE
-router.delete('/posts/:id',isLoggedIn, function(req, res){
+router.delete('/posts/:id', checkPostAuthor, function(req, res){
     Post.findByIdAndRemove(req.params.id, function(err){
         if(err){
             res.redirect('/posts');
@@ -84,7 +83,6 @@ router.delete('/posts/:id',isLoggedIn, function(req, res){
     });
 });
 
-
 //middleware
 function isLoggedIn(req, res, next) {
     if(req.isAuthenticated()) {
@@ -93,7 +91,7 @@ function isLoggedIn(req, res, next) {
     res.redirect('/login');
 }
 
-// checkPostAuthorization
+// checkPostAuthorization middleware
 function  checkPostAuthor(req, res, next){
     if(req.isAuthenticated()){
         Post.findById(req.params.id, function(err, foundPost){
