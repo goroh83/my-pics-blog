@@ -1,9 +1,10 @@
-var express = require('express');
-var router  = express.Router();
-var Post    = require('../models/post');
+var express     = require('express');
+var router      = express.Router();
+var Post        = require('../models/post');
+var middleware  = require('../middleware');  // files is named index.js so after middleware it's found automatically
 
 
-router.get('/secret', isLoggedIn, function(req, res){
+router.get('/secret', middleware.isLoggedIn, function(req, res){
    res.render('secret'); 
 });
 
@@ -19,7 +20,7 @@ router.get('/posts', function(req, res){
 });
 
 // NEW ROUTE
-router.get('/posts/new',isLoggedIn, function(req, res){
+router.get('/posts/new', middleware.isLoggedIn, function(req, res){
     res.render('posts/new');
     
 });
@@ -55,14 +56,14 @@ router.get('/posts/:id', function(req, res){
 });
 
 //EDIT ROUTE
-router.get('/posts/:id/edit', checkPostAuthor, function(req, res){
+router.get('/posts/:id/edit', middleware.checkPostAuthor, function(req, res){
         Post.findById(req.params.id, function(err, foundPost){
             res.render('posts/edit', {post: foundPost});
         });
 });
 
 //UPDATE ROUTE
-router.put('/posts/:id',checkPostAuthor, function(req, res){
+router.put('/posts/:id', middleware.checkPostAuthor, function(req, res){
     Post.findByIdAndUpdate(req.params.id, req.body.post, function(err, updatedPost){
         if(err) {
             res.redirect('/posts');
@@ -73,7 +74,7 @@ router.put('/posts/:id',checkPostAuthor, function(req, res){
 });
 
 // DELETE ROUTE
-router.delete('/posts/:id', checkPostAuthor, function(req, res){
+router.delete('/posts/:id', middleware.checkPostAuthor, function(req, res){
     Post.findByIdAndRemove(req.params.id, function(err){
         if(err){
             res.redirect('/posts');
@@ -82,33 +83,5 @@ router.delete('/posts/:id', checkPostAuthor, function(req, res){
         }
     });
 });
-
-//middleware
-function isLoggedIn(req, res, next) {
-    if(req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/login');
-}
-
-// checkPostAuthorization middleware
-function  checkPostAuthor(req, res, next){
-    if(req.isAuthenticated()){
-        Post.findById(req.params.id, function(err, foundPost){
-            if(err) {
-                res.redirect('back');
-            } else {
-                //does user own the post
-                if(foundPost.author.id.equals(req.user._id)){
-                    next();
-                } else {
-                    res.redirect('back');
-                }
-            }    
-        });
-    } else {
-        res.redirect('back');
-    }
-}
 
 module.exports = router;

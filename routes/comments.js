@@ -2,11 +2,11 @@ var express = require('express');
 var router  = express.Router();
 var Post    = require('../models/post');
 var Comment    = require('../models/comment');
-
+var middleware  = require('../middleware');  // files is named index.js so after middleware it's found automatically
 
 // ======= comments routes ========
 // new comment form
-router.get('/posts/:id/comments/new', isLoggedIn, function(req, res){
+router.get('/posts/:id/comments/new', middleware.isLoggedIn, function(req, res){
     Post.findById(req.params.id, function(err, post){
         if(err){
             console.log(err);
@@ -18,7 +18,7 @@ router.get('/posts/:id/comments/new', isLoggedIn, function(req, res){
 
 
 // create comment
-router.post('/posts/:id/comments', isLoggedIn, function(req, res) {
+router.post('/posts/:id/comments', middleware.isLoggedIn, function(req, res) {
     Post.findById(req.params.id, function(err, post){
         if(err){
             console.log(err);
@@ -42,9 +42,8 @@ router.post('/posts/:id/comments', isLoggedIn, function(req, res) {
     });
 });
 
-
 // EDIT comment
-router.get('/posts/:id/comments/:comment_id/edit', checkCommentAuthor, function(req, res){
+router.get('/posts/:id/comments/:comment_id/edit', middleware.checkCommentAuthor, function(req, res){
     Comment.findById(req.params.comment_id, function(err, foundComment){
         if(err) {
             res.redirect('back');
@@ -55,7 +54,7 @@ router.get('/posts/:id/comments/:comment_id/edit', checkCommentAuthor, function(
 });
 
 // UPDATE
-router.put('/posts/:id/comments/:comment_id', checkCommentAuthor, function(req, res){
+router.put('/posts/:id/comments/:comment_id', middleware.checkCommentAuthor, function(req, res){
     Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, updatedComment){
         if(err){
             res.redirect('back');
@@ -66,7 +65,7 @@ router.put('/posts/:id/comments/:comment_id', checkCommentAuthor, function(req, 
 });
 
 // DESTROY
-router.delete('/posts/:id/comments/:comment_id', checkCommentAuthor, function(req, res){
+router.delete('/posts/:id/comments/:comment_id', middleware.checkCommentAuthor, function(req, res){
     // finad and destroy
     Comment.findByIdAndRemove(req.params.comment_id, function(err) {
         if(err){
@@ -76,34 +75,5 @@ router.delete('/posts/:id/comments/:comment_id', checkCommentAuthor, function(re
         }   
     });    
 });
-
-
-// checkCommentAuthorization middleware
-function  checkCommentAuthor(req, res, next){
-    if(req.isAuthenticated()){
-        Comment.findById(req.params.comment_id, function(err, foundComment){
-            if(err) {
-                res.redirect('back');
-            } else {
-                //does user own the post
-                if(foundComment.author.id.equals(req.user._id)){
-                    next();
-                } else {
-                    res.redirect('back');
-                }
-            }    
-        });
-    } else {
-        res.redirect('back');
-    }
-}
-
-// middleware
-function isLoggedIn(req, res, next) {
-    if(req.isAuthenticated()) {
-        return next();
-    }
-    res.redirect('/login');
-}
 
 module.exports = router;
