@@ -41,13 +41,14 @@ middlewareObj.checkCommentAuthor = function(req, res, next){
     } else {
         res.redirect('back');
     }
-}
+};
 
 middlewareObj.isLoggedIn = function(req, res, next) {
     if(req.isAuthenticated()) {
         return next();
     }
+    req.flash('error', 'login first!');
     res.redirect('/login');
-}
+};
 
 module.exports = middlewareObj;

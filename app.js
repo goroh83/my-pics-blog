@@ -1,11 +1,10 @@
-var  expressSanitizer   = require('express-sanitizer'),
-methodOverride          = require('method-override'),
+var methodOverride      = require('method-override'),
 mongoose                = require('mongoose'),
+flash                   = require('connect-flash'),
 express                 = require('express'),
 app                     = express(),
 Post                    = require('./models/post'),
 Comment                 = require('./models/comment'),
-seedDB                  = require('./seeds'),
 passport                = require('passport'),
 bodyParser              = require('body-parser'),
 User                    = require('./models/user'),
@@ -22,17 +21,19 @@ var authRoutes = require('./routes/index');
 
 // APP CONFIG
 // seedDB();
-app.set('view engine', 'ejs');
 mongoose.connect('mongodb://localhost/post'); //  , {useMongoClient: true});
+app.use(bodyParser.urlencoded({extended: true}));
+app.set('view engine', 'ejs');
+app.use(express.static('public'));
+app.use(methodOverride('_method'));
+app.use(flash());
+
+// PASSPORT config
 app.use(require('express-session')({
     secret: 'Goroh is bald',
     resave: false,
     saveUninitialized: false
 }));
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(expressSanitizer());
-app.use(methodOverride('_method'));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -44,6 +45,8 @@ passport.deserializeUser(User.deserializeUser());
 // add currentUser property to every page
 app.use(function(req, res, next) {
    res.locals.currentUser = req.user;
+   res.locals.error = req.flash('error');
+   res.locals.success = req.flash('success');
    next();
 });
 
