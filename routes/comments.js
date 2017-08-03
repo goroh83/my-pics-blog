@@ -21,7 +21,7 @@ router.get('/posts/:id/comments/new', middleware.isLoggedIn, function(req, res){
 router.post('/posts/:id/comments', middleware.isLoggedIn, function(req, res) {
     Post.findById(req.params.id, function(err, post){
         if(err){
-            console.log(err);
+            req.flash('error', 'Ooops! Something went wrong...');
             res.redirect('/posts');
         } else {
             Comment.create(req.body.comment, function(err, comment){
@@ -35,6 +35,7 @@ router.post('/posts/:id/comments', middleware.isLoggedIn, function(req, res) {
                     //save comment
                     post.comments.push(comment);
                     post.save();
+                    req.flash('success', 'Successfully added a comment');
                     res.redirect('/posts/' + post._id);
                 }
             });
@@ -71,6 +72,7 @@ router.delete('/posts/:id/comments/:comment_id', middleware.checkCommentAuthor, 
         if(err){
             res.redirect('back');
         } else {
+            req.flash('success', 'comment deleted.');
             res.redirect('/posts/' + req.params.id);
         }   
     });    

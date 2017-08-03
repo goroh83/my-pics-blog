@@ -201,13 +201,17 @@ label {
 .error {
     background: red;
     color: white;
-    padding: 20px 40px;
+    padding: 10px 20px;
+    width: 100%;
+    text-align: center;
     display: inline-block;
 }
 
 .success {
     background: green;
     color: white;
-    padding: 20px 40px;
+    padding: 10px 20px;
+    width: 100%;
+    text-align: center;
     display: inline-block;
 }

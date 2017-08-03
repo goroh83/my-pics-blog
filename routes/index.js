@@ -17,15 +17,15 @@ router.get('/register', function(req, res){
 
 //handling user sign up
 router.post('/register', function(req, res){
-   req.body.username;
-   req.body.password;
-   User.register(new User({username: req.body.username}), req.body.password, function(err, user){
+   var newUser = new User({username: req.body.username});
+   User.register(newUser, req.body.password, function(err, user){
        if(err){
-           console.log(err);
-           return res.render('register');
+           req.flash('error', err.message);
+           return res.redirect("/register");
        }
-           passport.authenticate('local')(req, res, function(){
-               res.redirect('/secret');
+        passport.authenticate('local')(req, res, function(){
+            req.flash('success', 'Welcome ' + user.username);
+            res.redirect('/secret');
         });
    });
 });
@@ -41,8 +41,7 @@ router.get('/login', function(req, res){
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/secret',
     failureRedirect: '/login'
-}) ,function(req, res){
-    
+    }) ,function(req, res){
 });
 
 //logout
