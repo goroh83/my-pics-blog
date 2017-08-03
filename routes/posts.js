@@ -29,12 +29,13 @@ router.get('/posts/new', middleware.isLoggedIn, function(req, res){
 router.post('/posts', function(req, res){
     var title = req.body.title;
     var image = req.body.image;
+    var price = req.body.price;
     var desc = req.body.desc;
     var author = {
         id: req.user._id,
         username: req.user.username
     };
-    var newPost = {title: title, image: image, desc: desc, author: author};
+    var newPost = {title: title, image: image, price: price, desc: desc, author: author};
     Post.create(newPost, function(err, newlyCreated){
         if(err) {
             res.redirect('new');

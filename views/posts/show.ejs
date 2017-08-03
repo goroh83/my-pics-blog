@@ -5,9 +5,10 @@
         <div class='post-page'>
             <h1><%= post.title %></h1>
             <img src='<%= post.image %>' class='show-post'><br>
-            <p><em></em>submitted by: <%= post.author.username %></em></p>
+            <p><em></em>submitted by: <strong><%= post.author.username %></strong></em></p>
             <span><%= post.created.toDateString() %></span>
             <p><%= post.desc %></p>
+            <p>price: $<%= post.price %>/print</p>
             <a href='/posts' class='show-back__btn'>Back to Main</a>
             <% if(currentUser && post.author.id.equals(currentUser._id)) { %>
                 <a href='/posts/<%= post._id %>/edit' class='show-edit__btn'>Edit post</a>
